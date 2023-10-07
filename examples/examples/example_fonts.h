@@ -52,6 +52,9 @@ const char* example_fonts_update(pntr_image* canvas) {
     pntr_draw_rectangle_fill(canvas, 200, 50, textSize.x, textSize.y, PNTR_SKYBLUE);
     pntr_draw_text(canvas, ttfFont, ttfText, 200, 50, PNTR_DARKPURPLE);
 
+    const char* longText = "Knife wristwatch advert ablative marketing paranoid youtube bicycle numinous DIY 8-bit faded rebar concrete pistol pen. Convenience store A.I. office garage physical plastic drugs hotdog bicycle modem face forwards soul-delay city. Fluidity refrigerator rifle singularity papier-mache dissident engine pistol face forwards nano-rebar San Francisco meta-cyber-denim office silent. Rifle footage RAF decay network beef noodles euro-pop corporation denim tube camera table spook drugs crypto. \nDome chrome motion dolphin sign render-farm sprawl euro-pop tube decay apophenia towards weathered semiotics lights shrine silent.";
+    pntr_draw_text_wrapped(canvas, defaultFont, longText, 0, 20, PNTR_BLACK, 200);
+
     // Show the Resized Font
     pntr_draw_text(canvas, resizedFont, "Blue Text", 10, 65, PNTR_BLUE);
 

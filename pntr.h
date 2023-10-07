@@ -537,6 +537,8 @@ PNTR_API void* pntr_load_memory(size_t size);
 PNTR_API void pntr_unload_memory(void* pointer);
 PNTR_API void* pntr_memory_copy(void* destination, void* source, size_t size);
 PNTR_API pntr_image_type pntr_get_file_image_type(const char* filePath);
+PNTR_API const char* pntr_text_wrapped(pntr_font* font, const char* text, int maxWidth);
+PNTR_API void pntr_draw_text_wrapped(pntr_image* dst, pntr_font* font, const char* text, int posX, int posY, pntr_color color, int maxWidth);
 
 // Internal
 PNTR_API void pntr_put_horizontal_line_unsafe(pntr_image* dst, int posX, int posY, int width, pntr_color color);
@@ -4639,6 +4641,46 @@ PNTR_API void pntr_unload_memory(void* pointer) {
  */
 PNTR_API inline void* pntr_memory_copy(void* destination, void* source, size_t size) {
     return PNTR_MEMCPY(destination, source, size);
+}
+
+/**
+ * Draw text, wrapped to a maximum width (see pntr_text_wrapped)
+ * 
+ * @param dst The image of which to print the text on.
+ * @param font The font to use when rendering the text.
+ * @param text The text to write. Must be NULL terminated.
+ * @param posX The position to print the text, starting from the top left on the X axis.
+ * @param posY The position to print the text, starting from the top left on the Y axis.
+ * @param color The color of the text
+ * @param maxWidth The width (in pixels) to wrap the text to
+ */
+PNTR_API void pntr_draw_text_wrapped(pntr_image* dst, pntr_font* font, const char* text, int posX, int posY, pntr_color color, int maxWidth) {
+    const char* outText = pntr_text_wrapped(font, text, maxWidth);
+    pntr_draw_text(dst, font, outText, posX, posY, color);
+}
+
+/**
+ * Get text (line-broken by /n) that will not exceed a maximum width
+ * 
+ * @param font The font to use when rendering the text.
+ * @param text The text to write. Must be NULL terminated.
+ * @param maxWidth The width (in pixels) to wrap the text to
+ */
+PNTR_API const char* pntr_text_wrapped(pntr_font* font, const char* text, int maxWidth) {
+    // TODO: this could be optimized further, for fixed-width fonts
+    int lineWidth = pntr_measure_text(font, text);
+    if (lineWidth <= maxWidth) {
+        return text;
+    }
+    
+    int fullLen = strlen(text);
+    char* out = pntr_load_memory(fullLen * 2);
+    char* newLine = "\n";
+
+    // TODO: loop through characters and cat \n into out, where needed
+
+    pntr_unload_memory(out);
+    return "DO MORE";
 }
 
 /**
